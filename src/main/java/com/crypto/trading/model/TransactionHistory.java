@@ -1,7 +1,8 @@
 package com.crypto.trading.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -11,21 +12,18 @@ import java.time.format.DateTimeFormatter;
 @Table(name = "transaction_history")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class TransactionHistory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(nullable = false)
+    @Column(name = "crypto_pair", nullable = false)
     private String cryptoPair;
 
-    @Column(nullable = false)
+    @Column(name = "transaction_type", nullable = false)
     private String transactionType;  // Buy or Sell
 
     @Column(nullable = false)
@@ -37,13 +35,11 @@ public class TransactionHistory {
     @Column(nullable = false)
     private double total;
 
-    @Column(nullable = false)
+    @Column(name = "profit_loss", nullable = false)
     private double profitLoss;
 
     @Column(nullable = false)
     private String timestamp;
-
-
 
     public TransactionHistory(Long userId, String cryptoPair, String transactionType, double amount, double price, double total, double profitLoss) {
         this.userId = userId;
@@ -56,5 +52,9 @@ public class TransactionHistory {
         this.timestamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                 .withZone(ZoneOffset.UTC)
                 .format(Instant.now());
+    }
+
+    // Празен конструктор за JPA
+    public TransactionHistory() {
     }
 }

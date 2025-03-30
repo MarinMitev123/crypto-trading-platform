@@ -1,162 +1,123 @@
-//package com.crypto.trading.model;
-//
-//import jakarta.persistence.*;
-//import lombok.*;
-//import lombok.Getter;
-//
-//@Entity
-//@Table(name = "trades")
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//public class Trade {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", nullable = false)
-//    private User user;
-//
-//    @Column(nullable = false)
-//    private String crypto;
-//
-//    @Column(nullable = false)
-//    private double quantity;
-//
-//    @Column(nullable = false)
-//    private double price;
-//
-//    @Column(nullable = false)
-//    private boolean buy; // ❗ Променено от isBuy -> buy
-//
-//    @Column
-//    private Double profitLoss;
-//
-//    // Конструктори без Lombok за удобство
-//    public Trade(User user, String crypto, double quantity, double price, boolean buy) {
-//        this.user = user;
-//        this.crypto = crypto;
-//        this.quantity = quantity;
-//        this.price = price;
-//        this.buy = buy;
-//    }
-//
-//    public Trade(User user, String crypto, double quantity, double price, boolean buy, Double profitLoss) {
-//        this.user = user;
-//        this.crypto = crypto;
-//        this.quantity = quantity;
-//        this.price = price;
-//        this.buy = buy;
-//        this.profitLoss = profitLoss;
-//    }
-//}
-
 package com.crypto.trading.model;
 
-import jakarta.persistence.*;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-@Entity
-@Table(name = "trades")
 public class Trade {
+    private Wallet wallet;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Column(nullable = false)
+    private Long userId;
     private String crypto;
-
-    @Column(nullable = false)
     private double quantity;
-
-    @Column(nullable = false)
     private double price;
-
-    @Column(nullable = false)
-    private boolean buy;
-
-    @Column
-    private Double profitLoss;
+    private boolean buy;  // Ако е true, значи е покупка, ако е false - продажба
+    private double profitLoss; // Печалба или загуба от сделката
 
     public Trade() {}
 
-    public Trade(User user, String crypto, double quantity, double price, boolean buy) {
-        this.user = user;
+    public Trade(Long userId, String crypto, double quantity, double price, boolean buy) {
+        this.userId = userId;
         this.crypto = crypto;
         this.quantity = quantity;
         this.price = price;
         this.buy = buy;
-    }
-
-    public Trade(User user, String crypto, double quantity, double price, boolean buy, Double profitLoss) {
-        this.user = user;
-        this.crypto = crypto;
-        this.quantity = quantity;
-        this.price = price;
-        this.buy = buy;
-        this.profitLoss = profitLoss;
     }
 
     public Long getId() {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getCrypto() {
         return crypto;
     }
 
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public boolean isBuy() {
-        return buy;
-    }
-
-    public Double getProfitLoss() {
-        return profitLoss;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public void setCrypto(String crypto) {
         this.crypto = crypto;
+    }
+
+    public double getQuantity() {
+        return quantity;
     }
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public boolean isBuy() {
+        return buy;
     }
 
     public void setBuy(boolean buy) {
         this.buy = buy;
     }
 
-    public void setProfitLoss(Double profitLoss) {
+    public double getProfitLoss() {
+        return profitLoss;
+    }
+
+    public void setProfitLoss(double profitLoss) {
         this.profitLoss = profitLoss;
     }
+    private double getCurrentPrice() {
+        // Имплементация за получаване на текущата цена
+        return 0.0; // Примерна стойност
+    }
+    public void calculateProfitLoss() {
+        double currentPrice = getCurrentPrice();
+        if (buy) {
+            profitLoss = (currentPrice - price) * quantity;
+        } else {
+            profitLoss = (price - currentPrice) * quantity;
+        }
+    }
+//    public void processTransaction() {
+//        double amount = price * quantity;
+//        wallet.updateBalance(amount, buy);
+//        calculateProfitLoss();
+//    }
+//
+//    // Метод за получаване на текущата цена на криптовалутата от Kraken API
+//    private double getCurrentPrice() {
+//        try {
+//            String urlStr = "https://api.kraken.com/0/public/Ticker?pair=" + crypto + "USD";
+//            URL url = new URL(urlStr);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setRequestMethod("GET");
+//            conn.setConnectTimeout(5000);
+//            conn.setReadTimeout(5000);
+//
+//            InputStreamReader reader = new InputStreamReader(conn.getInputStream());
+//            JsonObject jsonResponse = JsonParser.parseReader(reader).getAsJsonObject();
+//            JsonObject result = jsonResponse.getAsJsonObject("result");
+//            JsonObject pair = result.getAsJsonObject(crypto + "USD");
+//            double currentPrice = pair.getAsJsonObject("c").get(0).getAsDouble();
+//
+//            return currentPrice;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return 0.0;
+//        }
+//    }
 }

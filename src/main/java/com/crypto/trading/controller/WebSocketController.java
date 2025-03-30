@@ -1,20 +1,26 @@
 package com.crypto.trading.controller;
 
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import com.crypto.trading.service.KrakenWebSocketClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/websocket")
 public class WebSocketController {
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final KrakenWebSocketClient krakenWebSocketClient;
 
-    public WebSocketController(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    @Autowired
+    public WebSocketController(KrakenWebSocketClient krakenWebSocketClient) {
+        this.krakenWebSocketClient = krakenWebSocketClient;
     }
 
-    @MessageMapping("/send") // Този мапинг ще се използва за изпращане на съобщения.
-    public void sendMessage(String message) {
-        messagingTemplate.convertAndSend("/topic/messages", message); // Изпраща съобщението към всички клиенти, свързани с "/topic/messages".
+    @GetMapping("/prices")
+    public Map<String, Double> getCryptoPrices() {
+        return krakenWebSocketClient.getAllPrices();
     }
 }

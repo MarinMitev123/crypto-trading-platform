@@ -18,9 +18,13 @@ public class TransactionHistoryController {
         this.transactionHistoryService = transactionHistoryService;
     }
 
-    // Получаване на транзакции по потребителски ID
+    @PostMapping
+    public void createTransaction(@RequestBody TransactionHistory transactionHistory) {
+        transactionHistoryService.saveTransaction(transactionHistory);
+    }
+
     @GetMapping("/{userId}")
-    public List<TransactionHistory> getTransactions(@PathVariable Long userId) {
-        return transactionHistoryService.getAllTransactions(userId);
+    public List<TransactionHistory> getUserTransactions(@PathVariable Long userId) {
+        return transactionHistoryService.getTransactionHistory(userId); // Викаме метода от Service
     }
 }

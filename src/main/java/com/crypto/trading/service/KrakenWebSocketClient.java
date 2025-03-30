@@ -20,9 +20,14 @@ public class KrakenWebSocketClient {
     private final Map<String, Double> cryptoPrices = new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    // В клас KrakenWebSocketClient
     private final List<String> tradingPairs = List.of(
-            "BTC/USD", "ETH/USD", "XRP/USD", "LTC/USD", "ADA/USD"
+            "XBT/USD", "ETH/USD", "XRP/USD", "LTC/USD", "ADA/USD",
+            "BCH/USD", "DOGE/USD", "DOT/USD", "SOL/USD", "AVAX/USD",
+            "LINK/USD", "MATIC/USD", "ALGO/USD", "LUNA/USD", "UNI/USD",
+            "FTM/USD", "AAVE/USD", "XLM/USD", "SHIB/USD", "FIL/USD"
     );
+
 
     @PostConstruct
     public void connect() {
@@ -58,13 +63,9 @@ public class KrakenWebSocketClient {
     // Изпраща валидно съобщение за абонамент към Kraken
     private void subscribeToChannels() {
         try {
-            List<String> krakenPairs = tradingPairs.stream()
-                    .map(pair -> pair.replace("BTC", "XBT")) // Заменя BTC с XBT
-                    .toList();
-
             Map<String, Object> message = Map.of(
                     "event", "subscribe",
-                    "pair", krakenPairs,
+                    "pair", tradingPairs,
                     "subscription", Map.of("name", "ticker") // Правилният формат
             );
 

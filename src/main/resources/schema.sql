@@ -4,7 +4,10 @@ CREATE TABLE IF NOT EXISTS users (
                                      username VARCHAR(255) NOT NULL,
                                      email VARCHAR(255) NOT NULL,
                                      password VARCHAR(255) NOT NULL
+
 );
+
+
 
 -- Таблица с портфейли (wallets)
 CREATE TABLE IF NOT EXISTS wallets (
@@ -27,3 +30,15 @@ CREATE TABLE IF NOT EXISTS trades (
                                       timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                       CONSTRAINT fk_trade_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+# CREATE TABLE transaction_history (
+#                                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+#                                      user_id BIGINT NOT NULL,
+#                                      crypto_pair VARCHAR(20) NOT NULL,
+#                                      transaction_type VARCHAR(10) NOT NULL,
+#                                      amount DOUBLE NOT NULL,
+#                                      price DOUBLE NOT NULL,
+#                                      total DOUBLE NOT NULL,
+#                                      profit_loss DOUBLE DEFAULT 0,
+#                                      timestamp DATETIME NOT NULL
+# );
+
